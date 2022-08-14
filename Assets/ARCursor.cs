@@ -9,7 +9,7 @@ public class ARCursor : MonoBehaviour
     public GameObject objectToPlace;
     public ARRaycastManager raycastManager;
 
-    public bool useCursor = true;
+    public bool useCursor = false;
 
     void Start()
     {
@@ -18,6 +18,7 @@ public class ARCursor : MonoBehaviour
 
     void Update()
     {
+
         if (useCursor)
         {
             UpdateCursor();
@@ -25,9 +26,19 @@ public class ARCursor : MonoBehaviour
 
         if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
         {
+            Touch touch = Input.GetTouch(0);
+            var touchPosition = touch.position;
+
+            bool isOverUI = touchPosition.IsPointOverUIObject();
+
+            if(isOverUI){
+                return;
+            }
+
             if (useCursor)
             {
                 GameObject.Instantiate(objectToPlace, transform.position, transform.rotation);
+                
             }
             else
             {
@@ -36,6 +47,7 @@ public class ARCursor : MonoBehaviour
                 if (hits.Count > 0)
                 {
                     GameObject.Instantiate(objectToPlace, hits[0].pose.position, hits[0].pose.rotation);
+                    
                 }
             }
         }
@@ -54,3 +66,4 @@ public class ARCursor : MonoBehaviour
         }
     }
 }
+
